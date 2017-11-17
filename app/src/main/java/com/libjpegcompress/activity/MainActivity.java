@@ -1,22 +1,26 @@
 package com.libjpegcompress.activity;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.libjpegcompress.R;
+import com.libjpegcompress.util.MPermissionsUtils;
 import com.libjpegcompress.util.camera.CameraCore;
 import com.libjpegcompress.util.camera.CameraProxy;
 
-import net.bither.util.NativeUtil;
+import java.io.File;
+
+import me.xiaosai.imagecompress.ImageCompress;
+
 
 /**
  * @Description TODO
@@ -26,7 +30,7 @@ import net.bither.util.NativeUtil;
  * @version V1.0.0
  */
 public class MainActivity extends Activity implements CameraCore.CameraResult{
-	private Button choose_image;
+	private Button choose_image,camera_image;
 	private CameraProxy cameraProxy;
 	private ImageView choose_bit;
 	/** SD卡根目录 */
@@ -41,8 +45,7 @@ public class MainActivity extends Activity implements CameraCore.CameraResult{
 			tempFile.mkdirs();
 		}
 		cameraProxy = new CameraProxy(this, MainActivity.this);
-		
-		choose_image = (Button)findViewById(R.id.choose_image);
+		choose_image = findViewById(R.id.choose_image);
 		choose_image.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -50,33 +53,54 @@ public class MainActivity extends Activity implements CameraCore.CameraResult{
 				cameraProxy.getPhoto2Album();
 			}
 		});
-		
-		choose_bit = (ImageView)findViewById(R.id.choose_bit);
+		choose_bit = findViewById(R.id.choose_bit);
+        camera_image = findViewById(R.id.camera_image);
+        camera_image.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String cameraPath = externalStorageDirectory+System.currentTimeMillis()/1000+".jpg";
+                cameraProxy.getPhoto2Camera(cameraPath);
+            }
+        });
 	}
 	
 	//拍照选图片成功回调
 	@Override
-	public void onSuccess(final String filePath) {
+	public void onCameraSuccess(final String filePath) {
 		File file = new File(filePath);
         if (file.exists()) {
-        	new Thread(){
-        		public void run() {
-        			final File file = new File(externalStorageDirectory+"/tempCompress.jpg");
-        			NativeUtil.compressBitmap(filePath,file.getPath());
-        			MainActivity.this.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							choose_bit.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
-						}
-					});
-        		};
-        	}.start();
+			ImageCompress.with(this)
+                    .load(filePath)
+                    .setTargetDir(externalStorageDirectory)
+                    .ignoreBy(150)
+                    .setOnCompressListener(new ImageCompress.OnCompressListener() {
+                        @Override
+                        public void onStart() {
+                            Log.e("compress","onStart");
+                        }
+                        @Override
+                        public void onSuccess(String filePath) {
+                            Log.e("compress","onSuccess="+filePath);
+                            choose_bit.setImageBitmap(BitmapFactory.decodeFile(filePath));
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            Log.e("compress","onError");
+                        }
+                    }).launch();
         }
 	}
 	
 	//拍照选图片失败回调
 	@Override
-	public void onFail(String message) {
+	public void onCameraFail(String message) {
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		MPermissionsUtils.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 	
 	@Override
@@ -97,5 +121,6 @@ public class MainActivity extends Activity implements CameraCore.CameraResult{
 		super.onSaveInstanceState(outState);
 		cameraProxy.onSaveInstanceState(outState);
 	}
+
 }
   

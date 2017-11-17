@@ -85,7 +85,6 @@ int generateJPEG(BYTE* data, int w, int h, int quality,
 	} else {
 		LOGI("optimize==false");
 	}
-
 	jcs.arith_code = false;
 	jcs.input_components = nComponent;
 	if (nComponent == 1)
@@ -107,12 +106,6 @@ int generateJPEG(BYTE* data, int w, int h, int quality,
 
 		jpeg_write_scanlines(&jcs, row_pointer, 1);
 	}
-
-	if (jcs.optimize_coding) {
-			LOGI("optimize==ture");
-		} else {
-			LOGI("optimize==false");
-		}
 	jpeg_finish_compress(&jcs);
 	jpeg_destroy_compress(&jcs);
 	fclose(f);
@@ -145,7 +138,7 @@ jbyteArray stoJstring(JNIEnv* env, const char* pat,int len) {
 	jsize alen = (*env)->GetArrayLength(env, bytes);
 	return bytes;
 }
-jstring Java_net_bither_util_NativeUtil_compressBitmap(JNIEnv* env,
+jstring Java_me_xiaosai_imagecompress_CompressCore_compressBitmap(JNIEnv* env,
 		jobject thiz, jobject bitmapcolor, int w, int h, int quality,
 		jbyteArray fileNameStr, jboolean optimize) {
 
