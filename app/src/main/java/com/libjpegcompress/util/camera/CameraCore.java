@@ -161,6 +161,7 @@ public class CameraCore {
                     break;
                 //裁剪之后的回调
                 case REQUEST_TAKE_CROP_CODE:
+                    photoURL = intent.getData();
                     String path = parseOwnUri(activity, photoURL);
                     cameraResult.onCameraSuccess(path);
                     break;
