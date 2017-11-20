@@ -22,8 +22,12 @@ android {
         }
     }
 
+    //so文件加载，需要添加下面代码
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
-dependencies {
-
-}
+apply from: "bintray.gradle"

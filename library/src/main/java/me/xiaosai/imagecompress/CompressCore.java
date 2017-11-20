@@ -40,7 +40,11 @@ public class CompressCore {
                                                 boolean optimize);
     //加载lib下两个so文件
     static {
-        System.loadLibrary("jpegbither");
-        System.loadLibrary("bitherjni");
+        try {
+            System.loadLibrary("jpegbither");
+            System.loadLibrary("bitherjni");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

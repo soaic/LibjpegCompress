@@ -17,12 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    //so文件加载，需要添加下面代码
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
+
 //    splits {
 //        abi {
 //            enable true
@@ -36,5 +31,6 @@ android {
 dependencies {
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compile project(':library')
+    //compile project(':library')
+    compile 'me.xiaosai:image_compress:1.0.1'
 }
