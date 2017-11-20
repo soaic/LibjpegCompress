@@ -1,5 +1,11 @@
 使用：
+Gradle
 
+```
+compile 'me.xiaosai:image_compress:1.0.1'
+```
+
+代码
 ```
 ImageCompress.with(this)
           .load(filePath)
