@@ -5,7 +5,7 @@ Gradle
 compile 'me.xiaosai:image_compress:1.0.1'
 ```
 
-代码
+Simple Example：
 ```
 ImageCompress.with(this)
           .load(filePath)
