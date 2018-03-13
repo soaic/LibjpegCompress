@@ -71,13 +71,11 @@ public class CameraCore {
 
     //调用系统裁剪图片，对Intent参数进行封装
     private Intent takeCropPicture(Uri photoURL, int with, int height) {
-
-        Uri corpUri = photoURL;
         Intent intent = new Intent("com.android.camera.action.CROP");
         //7.0
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        intent.setDataAndType(corpUri, "image/*");
+        intent.setDataAndType(photoURL, "image/*");
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);

@@ -73,7 +73,7 @@ install {
     }
 }
 
-//上传到JCenter
+上传到JCenter
 bintray {
     user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : project.property('BINTRAY_USER')
     key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : project.property('BINTRAY_KEY')

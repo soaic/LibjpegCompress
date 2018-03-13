@@ -70,15 +70,15 @@ public class MPermissionsUtils{
     public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults){
         List<String> deniedPermissions = new ArrayList<>();
         for(int i = 0; i < grantResults.length; i++){
-            if(grantResults[i] == PackageManager.PERMISSION_GRANTED){
+            if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
                 deniedPermissions.add(permissions[i]);
             }
         }
 
         if(deniedPermissions.size() > 0){
-            if(resultAction!= null) resultAction.doExecuteSuccess(requestCode);
-        }else{
             if(resultAction!= null) resultAction.doExecuteFail(requestCode);
+        }else{
+            if(resultAction!= null) resultAction.doExecuteSuccess(requestCode);
         }
     }
 
